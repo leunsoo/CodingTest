@@ -6,35 +6,32 @@ public class Main {
     public static void main(String[] args) throws IOException {
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	int count = Integer.parseInt(br.readLine());
-    	ArrayList<String> strArr = new ArrayList<>();
+    	String[] strArr = new String[count];
     	
     	for(int i = 0; i < count; ++i)
     	{
-    		String word = br.readLine();
-    		
-    		if(!strArr.contains(word))
-    		{
-    			strArr.add(word);
-    		}
+    		strArr[i] = br.readLine();
     	}
     	
-    	Collections.sort(strArr, new Comparator<String>() {
+    	Arrays.sort(strArr, new Comparator<String>() {
     		public int compare(String o1, String o2) {
-    			if(o1.length() > o2.length())
-    				return 1;
-    			else if(o1.length() < o2.length())
-    				return -1;
-    			else {
+    			if(o1.length() == o2.length())
     				return o1.compareTo(o2);
+    			else {
+    				return o1.length() - o2.length();
 				}
 			}
 		});
     	
     	
     	StringBuilder sb = new StringBuilder();
-    	for(int i = 0; i < strArr.size(); ++i)
+    	
+    	sb.append(strArr[0]).append("\n");
+    	for(int i = 1; i < strArr.length; ++i)
     	{
-    		sb.append(strArr.get(i)).append("\n");
+    		//중복된 요소가 아닐 경우
+    		if(!strArr[i].equals(strArr[i-1]))
+    			sb.append(strArr[i]).append("\n");
     	}
     	
     	System.out.println(sb.toString());
