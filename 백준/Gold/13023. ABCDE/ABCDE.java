@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 public class Main {
-	static ArrayList<ArrayList<Integer>> map = new ArrayList<ArrayList<Integer>>();
+	static ArrayList<Integer>[] map;
 	static boolean[] visited;
 			
 	public static void main(String[] args) throws IOException {
@@ -10,22 +10,23 @@ public class Main {
 		int N = Integer.parseInt(strs[0]); // 사람의 수
 		int M = Integer.parseInt(strs[1]); // 친구 관계의 수
 		
+		map = new ArrayList[N];
 		
 		for(int i = 0; i < N; ++i) {
-			map.add(new ArrayList<Integer>());
+			map[i] = new ArrayList<Integer>();
 		}
+		visited = new boolean[N];
 		
 		//맵 그리기
 		for(int i = 0; i < M; ++i) {
 			strs = br.readLine().split(" ");
 			int p1 = Integer.parseInt(strs[0]);
 			int p2 = Integer.parseInt(strs[1]);
-			map.get(p1).add(p2);
-			map.get(p2).add(p1);
+			map[p1].add(p2);
+			map[p2].add(p1);
 		}
 		
 		for(int i = 0; i < N; ++i) {
-			visited = new boolean[N];
 			dfs(0,i);	
 		}
 		
@@ -38,14 +39,12 @@ public class Main {
 			System.exit(0);
 		}
 		
-		if(map.get(node).size() == 0) return;
-		
-		for(int i = 0; i < map.get(node).size(); ++i) {
-			if(visited[map.get(node).get(i)]) continue;
+		for(int i = 0; i < map[node].size(); ++i) {
+			if(visited[map[node].get(i)]) continue;
 			
-			visited[map.get(node).get(i)] = true;
-			dfs(cnt+1, map.get(node).get(i));
-			visited[map.get(node).get(i)] = false;
+			visited[map[node].get(i)] = true;
+			dfs(cnt+1, map[node].get(i));
+			visited[map[node].get(i)] = false;
 		}
 	}
 }
