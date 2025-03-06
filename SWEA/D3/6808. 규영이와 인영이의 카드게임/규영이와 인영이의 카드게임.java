@@ -41,6 +41,9 @@ public class Solution {
 		bw.flush();
 		bw.close();
 	}
+	
+	static int[] dp = { 0, 1, 2, 6, 24 };
+	static int score;
 
 	private static void dfs(int cnt, int kyScore, int iyScore) {
 		if (cnt == 9) {
@@ -48,15 +51,27 @@ public class Solution {
 			if(iyScore > kyScore) iyWin++;
 			return;
 		}
+		
+		if(cnt >= 5) {
+			if(kyScore > 85) {
+				kyWin += dp[9-cnt];
+				return;
+			}
+			if(iyScore > 85) {
+				iyWin += dp[9-cnt];
+				return;
+			}
+		}
 
 		for (int i = 0; i < 9; ++i) {
 			if(visited[i]) continue;
 			
 			visited[i] = true;
+			score = ky[cnt] + iy[i];
 			if(ky[cnt] > iy[i]) 
-				dfs(cnt+1, kyScore + ky[cnt] + iy[i], iyScore);
-			if(iy[i] > ky[cnt])
-				dfs(cnt+1, kyScore, iyScore + ky[cnt] + iy[i]);
+				dfs(cnt+1, kyScore + score, iyScore);
+			else
+				dfs(cnt+1, kyScore, iyScore + score);
 			
 			visited[i] = false;
 		}
