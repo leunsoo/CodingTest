@@ -4,7 +4,7 @@ import java.util.*;
 public class Main {
 	static int N;
 	static int[] nums;
-	static Set<Integer> set = new TreeSet<Integer>();
+	static boolean[] visited;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,22 +17,20 @@ public class Main {
 			nums[i] = Integer.parseInt(stk.nextToken());
 		}
 
+		visited = new boolean[2000000];
+		
 		dfs(0, 0, 0);
 		
-		int check = 0;
-		for (int num : set) {
-			if(num > check) {
-				System.out.println(check);
+		for(int i = 1; i <= visited.length; ++i) {
+			if(visited[i] == false) {
+				System.out.println(i);
 				return;
 			}
-			check++;
 		}
-		
-		System.out.println(check);
 	}
 	
 	private static void dfs(int cnt, int idx, int value) {
-		set.add(value);
+		visited[value] = true;;
 		
 		if(cnt == N) {
 			return;
