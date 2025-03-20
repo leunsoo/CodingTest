@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
 	static char[][] map;
-	static boolean[][][] visited;
 
 	static int N;
 	static int M;
@@ -15,7 +14,6 @@ public class Main {
 		N = Integer.parseInt(strs[0]);
 		M = Integer.parseInt(strs[1]);
 		map = new char[N][M];
-		visited = new boolean[N][M][2];
 
 		int cr1, cc1, cr2, cc2;
 		cr1 = cc1 = cr2 = cc2 = -1;
@@ -38,8 +36,6 @@ public class Main {
 			}
 		}
 
-		visited[cr1][cc1][0] = true;
-		visited[cr2][cc2][1] = true;
 		dfs(0, cr1, cc1, cr2, cc2);
 
 		if (min == Integer.MAX_VALUE) {
@@ -53,7 +49,7 @@ public class Main {
 	static int[] dc = { 0, 0, -1, 1 };
 
 	private static void dfs(int cnt, int cr1, int cc1, int cr2, int cc2) {
-		if (cnt == 10) {
+		if (cnt == 10 || cnt > min) {
 			return;
 		}
 
@@ -86,19 +82,13 @@ public class Main {
 				ncr2 = cr2;
 				ncc2 = cc2;
 			}
-			
 			if(dropCnt == 1) {
 				if(min > cnt+1) min = cnt+1;
 				return;
 			}
 			else if(dropCnt == 0) {
-				visited[ncr1][ncc1][0] = true;
-				visited[ncr2][ncc2][1] = true;
 				dfs(cnt+1, ncr1, ncc1, ncr2, ncc2);
-				visited[ncr1][ncc1][0] = false;
-				visited[ncr2][ncc2][1] = false;
 			}
 		}
 	}
-
 }
