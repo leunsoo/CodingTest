@@ -2,7 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static String[][] map;
+	static char[][] map;
+	static boolean[] visited; 
 	static int R;
 	static int C;
 	
@@ -13,15 +14,18 @@ public class Main {
 		R = Integer.parseInt(strs[0]);
 		C = Integer.parseInt(strs[1]);
 		
-		map = new String[R][C];
+		map = new char[R][C];
+		visited = new boolean['Z'-'A'+1];
 		
 		for(int i = 0; i < R; ++i) {
 			String str = br.readLine();
 			for(int j = 0; j < C; ++j) {
-				map[i][j] = Character.toString(str.charAt(j)); 
+				map[i][j] = str.charAt(j); 
 			}
 		}
-		dfs(map[0][0], 0, 0);
+		
+		visited[map[0][0]-'A'] = true;
+		dfs(1, 0, 0);
 		
 		System.out.println(max);
 	}
@@ -29,18 +33,19 @@ public class Main {
 	static int[] dr = { -1, 1, 0, 0 };
 	static int[] dc = { 0, 0, -1, 1 };
 	
-	static void dfs(String path, int r, int c) {
-		if(max < path.length()) max = path.length();
+	static void dfs(int cnt, int r, int c) {
+		if(max < cnt) max = cnt;
 		
 		for(int d = 0; d < 4; ++d) {
 			int nr = r + dr[d];
 			int nc = c + dc[d];
 			
 			if( nr < 0 || nc < 0 || nr >= R || nc >= C ) continue;
-			if(path.contains(map[nr][nc])) continue;
-
-			//문자 저장. 포함여부 확인
-			dfs(path+map[nr][nc], nr , nc);
+			if(visited[map[nr][nc]-'A']) continue;
+			
+			visited[map[nr][nc]-'A'] = true;
+			dfs(cnt + 1, nr , nc);
+			visited[map[nr][nc]-'A'] = false;
  		}
 	}
 	
