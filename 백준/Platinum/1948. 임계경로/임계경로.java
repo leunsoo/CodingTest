@@ -61,7 +61,7 @@ public class Main {
 	
 	//다익
 	static void dijkstra(int start, int end) {
-		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		Queue<Edge> pq = new ArrayDeque<Edge>();
 		pq.add(new Edge(start, 0));
 		dist[start] = 0;
 		
