@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-class Edge implements Comparable<Edge> {
+class Edge{
 	int to;
 	int cost;
 	
@@ -9,17 +9,13 @@ class Edge implements Comparable<Edge> {
 		this.to = to;
 		this.cost = cost;
 	}
-	
-	@Override
-	public int compareTo(Edge o) { //최고비용순 
-		return o.cost - this.cost;
-	}
 }
 
 public class Main {
 	static int[] dist; // 최고 비용 저장 
 	static ArrayList<Edge>[] graph;
 	static ArrayList<Edge>[] reverse; //역추적용 
+	static int[] indegree;
 	static int edgeCnt;
 	static int N;
 	
@@ -29,8 +25,10 @@ public class Main {
 		int M = Integer.parseInt(br.readLine());
 		
 		dist = new int[N+1];
+		indegree = new int[N+1];
 		graph = new ArrayList[N+1];
 		reverse = new ArrayList[N+1];
+		
 		edgeCnt = 0;
 		
 		for(int i = 0; i <= N; ++i) graph[i] = new ArrayList<Edge>();
@@ -46,36 +44,35 @@ public class Main {
 			
 			graph[start].add(new Edge(to, cost));
 			reverse[to].add(new Edge(start, cost));
+			indegree[to]++;
 		}
 		
 		StringTokenizer stk = new StringTokenizer(br.readLine());
 		int start = Integer.parseInt(stk.nextToken());
 		int end = Integer.parseInt(stk.nextToken());
 		
-		dijkstra(start, end);
+		topologicalSort(start, end);
 		reverse(end);
 		
 		System.out.println(dist[end]);
 		System.out.println(edgeCnt);
 	}
 	
-	//다익
-	static void dijkstra(int start, int end) {
-		Queue<Edge> pq = new ArrayDeque<Edge>();
-		pq.add(new Edge(start, 0));
+	//위상 
+	static void topologicalSort(int start, int end) {
+		Queue<Edge> queue = new ArrayDeque();
+		queue.add(new Edge(start, 0));
 		dist[start] = 0;
 		
-		while (!pq.isEmpty()) {
-			Edge e = pq.poll();
-			
-			if(e.cost < dist[e.to]) continue;
-			
+		while (!queue.isEmpty()) {
+			Edge e = queue.poll();
+
 			for (Edge edge : graph[e.to]) {
-				int newCost = e.cost + edge.cost;
+				indegree[edge.to]--;
+				dist[edge.to] = Math.max(dist[edge.to], dist[e.to] + edge.cost);
 				
-				if(newCost > dist[edge.to]) {
-					dist[edge.to] = newCost;
-					pq.add(new Edge(edge.to, newCost));
+				if(indegree[edge.to] == 0) {
+					queue.add(edge);
 				}
 			}
 		}
@@ -85,22 +82,21 @@ public class Main {
 	static void reverse(int end) {
 		Queue<Integer> queue = new ArrayDeque<>();
 		queue.add(end);
-		boolean[][] visited = new boolean[N+1][N+1];
+		boolean[] visited = new boolean[N+1];
 		
 		while (!queue.isEmpty()) {
 			int e = queue.poll();
 			
 			for (Edge edge : reverse[e]) {
 				if(dist[edge.to] + edge.cost == dist[e]) {
-					if(!visited[e][edge.to]) { 
-						edgeCnt++;
+					edgeCnt++;
+					
+					if(!visited[edge.to]) { 
 						queue.add(edge.to);
-						visited[e][edge.to] = true;
+						visited[edge.to] = true;
 					}
 				}
 			}
 		}
 	}
 }
-
-
