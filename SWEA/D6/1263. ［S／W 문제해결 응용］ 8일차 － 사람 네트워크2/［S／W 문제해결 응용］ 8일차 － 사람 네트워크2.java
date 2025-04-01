@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
+	static final int INFINITY = 987654321;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int T = Integer.parseInt(br.readLine());
@@ -11,59 +12,46 @@ public class Solution {
 			sb.append("#").append(tc).append(" ");
 			
 			StringTokenizer stk = new StringTokenizer(br.readLine());
-			int N = Integer.parseInt(stk.nextToken());
-			ArrayList<Integer>[] graph = new ArrayList[N];
-			for(int i = 0; i < N; ++i) {
-				graph[i] = new ArrayList<>();
-			}
+			int N = Integer.parseInt(stk.nextToken()); // 사람 수
+			int[][] arr = new int[N][N];
 			
 			for(int i = 0; i < N; ++i) {
 				for(int j = 0; j < N; ++j) {
 					int num = Integer.parseInt(stk.nextToken());
-					if(num != 0) {
-						graph[i].add(j);
-						graph[j].add(i);
-					}
+					
+					if(num == 0) arr[i][j] = INFINITY;
+					else arr[i][j] = num;
 				}
+				arr[i][i] = 0;
 			}
 			
-			int min = Integer.MAX_VALUE;
-			for(int i = 0; i < N; ++i) {
-				min = Math.min(min, bfs(graph, i));
-			}
-			
-			
-			
-			sb.append(min).append("\n");
+			sb.append(floyd_warshall(arr)).append("\n");
 		}	
 		
 		System.out.println(sb.toString());
 	}
 	
-	private static int bfs(ArrayList<Integer>[] graph, int start) {
-		boolean visited[] = new boolean[graph.length];
-		Queue<Integer> queue = new ArrayDeque<Integer>();
-		queue.add(start);
-		visited[start] = true;
-		
-		int dist = 0;
-		int depth = -1;
-		while (!queue.isEmpty()) {
-			int size = queue.size();
-			
-			for(int i = 0; i < size; ++i) {
-				int curr = queue.poll();
-				
-				for (int node : graph[curr]) {
-					if(visited[node]) continue;
-					queue.add(node);
-					visited[node] = true;
+	private static int floyd_warshall(int[][] arr) {
+		//경 출 도
+		for(int j = 0; j < arr.length; ++j ) {
+			for(int i = 0; i < arr.length; ++i) {
+				for(int k = 0; k < arr.length; ++k) {
+					arr[i][k] = Math.min(arr[i][k], arr[i][j] + arr[j][k]);
 				}
 			}
-			
-			dist += ++depth*size;
 		}
 		
-		return dist;
+		int min = Integer.MAX_VALUE;
+		for(int i = 0; i < arr.length; ++i) {
+			int sum = 0;
+			for(int j = 0; j < arr.length; ++j) {
+				if(i == j ) continue;
+				sum += arr[i][j];
+			}
+			
+			min = Math.min(min, sum);
+		}
+		
+		return min;
 	}
 }
