@@ -2,8 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static long[] minTree;
-	static long[] maxTree;
+	static int[] minTree;
+	static int[] maxTree;
 	static int[] arr;
 
 	public static void main(String[] args) throws IOException {
@@ -17,8 +17,8 @@ public class Main {
 			int K = Integer.parseInt(stk.nextToken());
 
 			arr = new int[N+1];
-			minTree = new long[N * 4];
-			maxTree = new long[N * 4];
+			minTree = new int[N * 4];
+			maxTree = new int[N * 4];
 			
 			for(int i = 1; i <= N; ++i) 
 			{
@@ -64,7 +64,7 @@ public class Main {
 
 	}
 
-	private static long init_min(int node, int start, int end) {
+	private static int init_min(int node, int start, int end) {
 		if (start == end) {
 			return minTree[node] = arr[start];
 		}
@@ -73,7 +73,7 @@ public class Main {
 		return minTree[node] = Math.min(init_min( node * 2, start, mid), init_min( node * 2 + 1, mid + 1, end));
 	}
 
-	private static long init_max(int node, int start, int end) {
+	private static int init_max(int node, int start, int end) {
 		if (start == end) {
 			return maxTree[node] = arr[start];
 		}
@@ -110,16 +110,16 @@ public class Main {
 		maxTree[node] = Math.max(maxTree[node*2], maxTree[node*2+1]);
 	}
 
-	private static long query_min(int node, int start, int end, int left, int right) {
-		if(left > end || start > right) return Long.MAX_VALUE;
+	private static int query_min(int node, int start, int end, int left, int right) {
+		if(left > end || start > right) return Integer.MAX_VALUE;
 		if(left <= start && end <= right) return minTree[node];
 		
 		int mid = (start+end)/2;
 		return Math.min(query_min(node*2, start, mid, left, right), query_min(node*2+1, mid+1, end, left, right));
 	}
 	
-	private static long query_max( int node, int start, int end, int left, int right) {
-		if(left > end || start > right) return Long.MIN_VALUE;
+	private static int query_max( int node, int start, int end, int left, int right) {
+		if(left > end || start > right) return Integer.MIN_VALUE;
 		if(left <= start && end <= right) return maxTree[node];
 		
 		int mid = (start+end)/2;
