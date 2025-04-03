@@ -14,10 +14,8 @@ public class Solution {
         BigInteger two = BigInteger.valueOf(2);
         
         for(int i = 2; i <= 250; ++i) {
-        	dp[i] = dp[i-1];
-        	dp[i] = dp[i].add(dp[i-2].multiply(two));
+        	dp[i] = dp[i-1].add(dp[i-2].multiply(two));
         }
-        
         
         StringBuilder sb = new StringBuilder();
         for(int tc = 1; tc <= T; ++tc) {
