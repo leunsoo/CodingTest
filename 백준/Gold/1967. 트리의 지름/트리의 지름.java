@@ -16,6 +16,7 @@ public class Main {
 	static boolean[] visited;
 	static int N; 
 	static int max;
+	static int maxIdx;
 	static int maxCost;
 	
 	public static void main(String[] args) throws IOException {
@@ -24,8 +25,6 @@ public class Main {
 		
 		graph = new ArrayList[N+1];
 		visited = new boolean[N+1];
-		max = 0;
-		maxCost = 0;
 		
 		for(int i = 0; i <= N; ++i) {
 			graph[i] = new ArrayList<>();
@@ -37,23 +36,26 @@ public class Main {
 			int c = Integer.parseInt(stk.nextToken());
 			int cost = Integer.parseInt(stk.nextToken());
 			
-			maxCost = Math.max(cost, maxCost);
-			
 			graph[p].add(new Node(c, cost));
 			graph[c].add(new Node(p, cost));
 		}
 		
-		for(int i = 1; i <= N; ++i) {
-			visited[i] = true;
-			dfs(i, 0);
-			visited[i] = false;
-		}
+		visited[1] = true;
+		dfs(1, 0);
+		visited[1] = false;
+		
+		visited[maxIdx] = true;
+		dfs(maxIdx, 0);
+		visited[maxIdx] = false;
 		
 		System.out.println(max);
 	}
 	
 	private static void dfs(int curr, int sum) {	
-		max = Math.max(max, sum);
+		if(max < sum ) {
+			max = sum;
+			maxIdx = curr;
+		}
 		
 		for (Node next : graph[curr]) {
 			if(visited[next.node]) continue;
