@@ -44,11 +44,14 @@ public class Main {
 		dist[1] = 0;
 		
 		for(int i = 0; i < N-1; ++i) {
+		    boolean updated = false;
 			for (Edge edge : edges) {
 				if(dist[edge.from] != INF && dist[edge.to] > dist[edge.from] + edge.cost ) {
 					dist[edge.to] = dist[edge.from] + edge.cost;
+		            updated = true;
 				}
 			}
+			if (!updated) break; 
 		}
 		
 
