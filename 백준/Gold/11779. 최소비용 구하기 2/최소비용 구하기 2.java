@@ -49,12 +49,13 @@ public class Main {
 
         System.out.println(dist[end]);
 
-        List<Integer> path = getPath(start,end);
+        ArrayDeque<Integer> path = getPath(start,end);
         System.out.println(path.size());
 
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < path.size(); ++i) {
-            sb.append(path.get(i)).append(" ");
+
+        while (!path.isEmpty()) {
+            sb.append(path.pop()).append(" ");
         }
 
         System.out.println(sb);
@@ -91,17 +92,15 @@ public class Main {
         }
     }
 
-    static List<Integer> getPath(int start, int end) {
-        List<Integer> path = new ArrayList<>();
+    static ArrayDeque<Integer> getPath(int start, int end) {
+        ArrayDeque<Integer> path = new ArrayDeque<>();
 
         int current = end;
         while( current != -1) {
-            path.add(current);
+            path.push(current);
             current = parent[current];
         }
 
-        Collections.reverse(path);
         return path;
     }
-
 }
